@@ -41,5 +41,5 @@ def update_joke(number: int, the_new_joke: str) -> dict:
 
 
 def delete_joke(number: int) -> None:
-    # abort if number doesn't exist in database, otherwise no news is good news
-    pass
+    if randint(1, 10) == 1:
+        abort(404)

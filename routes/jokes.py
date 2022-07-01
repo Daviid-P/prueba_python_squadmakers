@@ -1,6 +1,6 @@
 from random import randint
 
-from flask import Blueprint, abort, jsonify, request
+from flask import Blueprint, Response, abort, jsonify, request
 from utils.fake_db import (
     get_chuck_norris_joke,
     get_dad_joke,
@@ -54,3 +54,5 @@ def put_joke(number: int):
 @jokes_blueprint.route("/joke/<int:number>", methods=["DELETE"])
 def delete_joke(number: int):
     _delete_joke(number=number)
+    # Empty response, just status 200
+    return Response("", status=200)
