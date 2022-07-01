@@ -34,10 +34,10 @@ def create_joke(the_joke: str) -> dict:
     }
 
 
-def update_joke(number: int, the_new_joke: str) -> bool:
+def update_joke(number: int, the_new_joke: str) -> dict:
     if randint(1, 10) == 1:
-        return False
-    return True
+        abort(500)
+    return {"number": number, "string": the_new_joke}
 
 
 def delete_joke(joke_id: int) -> None:

@@ -27,15 +27,16 @@ def get_specific_joke(joke_type: str):
         "dad": get_dad_joke,
     }
     try:
-        return jsonify({"joke": AVAILABLE_JOKES[joke_type.lower()]})
+        return jsonify({"joke": AVAILABLE_JOKES[joke_type.lower()]()})
     except KeyError as e:
         abort(404)
 
 
-@jokes_blueprint.route("/joke", methods=["POST"])
+@jokes_blueprint.route("/joke/", methods=["POST"])
 def post_joke():
     data = request.get_json()
-    if "the_joke" not in data or data["the_joke"].strip() != "":
+    print(data)
+    if "the_joke" not in data or data["the_joke"].strip() == "":
         abort(422)
     joke = create_joke(data["the_joke"])
     return jsonify({"success": True, "joke": joke})
@@ -46,8 +47,8 @@ def put_joke(number: int):
     data = request.get_json()
     if "the_new_joke" not in data and data["the_new_joke"].strip() != "":
         abort(422)
-    success = update_joke(number=number, the_new_joke=data["the_new_joke"])
-    return jsonify({"success": success})
+    updated_joke = update_joke(number=number, the_new_joke=data["the_new_joke"])
+    return jsonify(updated_joke)
 
 
 @jokes_blueprint.route("/joke/<int:number>", methods=["DELETE"])

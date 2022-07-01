@@ -71,6 +71,8 @@ paths:
                 $ref: '#/components/schemas/UpdateJokeResponse'
         404:
           description: Wrong joke_id
+        500:
+          description: 1 out of 10 times simulate server error
     delete:
       summary: Deletes a joke
       description: Deletes a joke matching the path parameter number.
