@@ -1,3 +1,10 @@
+# Tarea 1:
+```bash
+git clone git@github.com:Daviid-P/prueba_python_squadmakers.git
+cd prueba_python_squadmakers
+pip install -r requirements.txt
+python main.py
+```
 # Tarea 2:
 ## ¿Qué repositorio utilizarías?
 
