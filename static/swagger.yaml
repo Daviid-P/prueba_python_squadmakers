@@ -1,0 +1,188 @@
+openapi: "3.0.0"
+ 
+info:
+  version: 0.1.0
+  title: Squadmakers Test
+  description: A Flask API for the test
+ 
+paths:
+  /joke/:
+    get:
+      summary: Gets a random joke
+      description: Returns a random Chuck Norris or Dad Joke.
+      responses:
+        200:
+          description: OK
+    post:
+      summary: Create a new joke in the DB
+      description: Adds a new joke to the database.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/String'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JokeCreated'
+  /joke/{joke_type}:
+    get:
+      summary: Gets a random joke
+      description: Returns a random Chuck Norris or Dad Joke based on the supplied joke_type path parameter.
+      parameters:
+        - in: path
+          name: joke_type
+          schema:
+            $ref: '#/components/schemas/JokeType'
+          required: true
+          description: Type of joke to get
+      responses:
+        200:
+          description: OK
+        404:
+          description: Wrong joke_type
+  /joke/{number}:
+    put:
+      summary: Updates a joke
+      description: Updates a joke matching the path parameter number.
+      parameters:
+        - in: path
+          name: number
+          schema:
+            $ref: '#/components/schemas/Integer'
+          required: true
+          description: The id of the joke to update
+      requestBody:
+        required: true
+        description: The updated joke
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateJokeRequest'
+      responses:
+        200:
+          description: Updated Joke
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateJokeResponse'
+        404:
+          description: Wrong joke_id
+    delete:
+      summary: Deletes a joke
+      description: Deletes a joke matching the path parameter number.
+      parameters:
+        - in: path
+          name: number
+          schema:
+            $ref: '#/components/schemas/Integer'
+          required: true
+          description: The id of the joke to update
+      responses:
+        200:
+          description: OK
+        404:
+          description: Wrong joke_id
+  /math/sum:
+    get:
+      summary: Give's you the number you provided +1
+      description: Returns the number you provide in query parameter number plus 1
+      parameters:
+        - in: query
+          name: number
+          schema:
+            $ref: '#/components/schemas/Integer'
+          required: true
+          description: The number
+      responses:
+        200:
+          description: OK
+          content:
+            plain/text:
+              schema:
+                $ref: '#/components/schemas/SumResponse'
+        400:
+          description: Missing number query parameter
+  /math/mcm:
+    get:
+      summary: Give's you the least common denominator
+      description: Returns the least common denominator of a list of numbers
+      parameters:
+        - in: query
+          name: numbers
+          schema:
+            $ref: '#/components/schemas/IntegerArray'
+          required: true
+          description: The numbers
+      responses:
+        200:
+          description: OK
+          content:
+            plain/text:
+              schema:
+                $ref: '#/components/schemas/LCDResponse'
+                example: 5
+        400:
+          description: Missing numbers query parameter
+
+components:
+  schemas:
+    JokeType:
+      type: string
+      enum: [chuck, dad]
+      example: chuck
+    Joke:
+      type: object
+      properties:
+        number:
+          type: integer
+          description: The Joke id if it success is true
+        joke:
+          type: string
+          description: The random joke
+      example: {number: 1, string: "What did the fish say when he swam into a wall? Dam"}
+    JokeCreated:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Did the creation succeed?
+        joke:
+         allOf:
+          - $ref: '#/components/schemas/Joke'
+          - type: object
+          - description: The Joke if success is true
+        message:
+          type: string
+          description: The error message if success is false
+      example: {success: true, joke: {number: 1, string: "What did the fish say when he swam into a wall? Dam"}}
+    String:
+      type: string
+    UpdateJokeRequest:
+      allOf:
+        - $ref: '#/components/schemas/String'
+        - example:
+            the_new_joke: "Arteries will always have a special place in my heart (Updated)."
+    UpdateJokeResponse:
+      allOf:
+        - $ref: '#/components/schemas/Joke'
+        - example: {number: 1, string: "Arteries will always have a special place in my heart (Updated)."}
+    Integer:
+      type: integer
+      example: 5
+    IntegerArray:
+      type: array
+      items:
+        type: integer
+        example: [5,10,15]
+    SumResponse:
+      allOf:
+        - example: 6
+        - $ref: '#/components/schemas/Integer'
+    LCDResponse:
+      allOf:
+        - example: 5
+        - $ref: '#/components/schemas/Integer'
